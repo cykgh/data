@@ -1,6 +1,6 @@
 /*SQL SERVER*/
 --combine SUBSTRING(string, start, length) and CHARINDEX(substring, string) 
---to extract string after a character
+--to extract a number of characters from a string (starting from mid) after a character
 select substring(columnname, charindex('-', columnname)+1, len(columnname)-charindex('-', columnname))
 from tablename;
 
