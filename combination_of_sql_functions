@@ -1,0 +1,15 @@
+/*SQL SERVER*/
+--combine SUBSTRING(string, start, length) and CHARINDEX(substring, string) 
+--to extract string after a character
+select substring(columnname, charindex('-', columnname)+1, len(columnname)-charindex('-', columnname))
+from tablename;
+
+--combine LEFT(string, number_of_chars) and CHARINDEX(substring, string) 
+--to extract a number of characters from a string (starting from left) before a character
+select left(columnname, charindex('-', columnname)-1) as extractstring
+from tablename;
+
+--combine RIGHT(string, number_of_chars) and CHARINDEX(substring, string)
+--to extract a number of characters from a string (starting from right) after a character
+select right(columnname, len(columnname)-charindex('-', columnname)) as extractstring
+from tablename;
