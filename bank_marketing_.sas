@@ -1,13 +1,15 @@
+/*load data into SAS*/
 proc import datafile = "/home/yiekhye19990/bank_marketing/bank.csv"
 out = work.bank
 dbms = csv replace;
 run;
 
-/* overview */
-proc contents data = work.bank varnum;
-run;
-
-
+/*
+data step -> read & modify data 
+proc step -> analyze data
+*/
+ 
+/*rename column names*/
 data bank;
 set work.bank;
 rename default = is_credit_default
@@ -25,24 +27,52 @@ rename default = is_credit_default
 	   y = subscribed;
 run;
 
+/*show contents*/
+proc contents data = work.bank;
+run;
 
+/*show 10 observations*/
 proc print data = work.bank(obs=10);
 run;
 
-proc freq data = work.bank;
-tables _all_ / missing;
+/*query*/
+proc sql outobs=100;
+select total_passed_day, total_previous_contact
+from work.bank
+where total_passed_day = -1
+order by total_passed_day asc;
+quit;
+
+/*replace values*/
+data bank;
+set work.bank;
+total_passed_day = tranwrd(total_passed_day,-1,0);
 run;
 
-/* descriptive statistics */
+/*declare missing values format*/
+proc format;
+ value $missfmt ' '='Missing' other='Not Missing';
+ value  missfmt  . ='Missing' other='Not Missing';
+run;
+
+/*count missing values*/
+proc freq data = work.bank;
+format _character_ $missfmt.;
+tables _character_ / missing nocum nopercent;
+format _numeric_ missfmt.;
+tables _numeric_ / missing nocum nopercent;
+run;
+
+/*descriptive statistics*/
 proc means data = work.bank;
 var _numeric_ ;
 run;
 
-proc freq data = work.bank;
+proc freq data = work.bank order = freq;
 tables _character_;
 run;
 
-/* data visualization */
+/*data visualization*/
 ods select histogram;
 proc univariate data=work.bank;
 histogram _numeric_;
@@ -88,3 +118,5 @@ run;
  
 proc sgrender data=work.bank template=Data_Visualization;
 run;
+
+
