@@ -1,7 +1,8 @@
 /*load data into SAS*/
 proc import datafile = "/home/yiekhye19990/bank_marketing/bank.csv"
 out = work.bank
-dbms = csv replace;
+dbms = csv 
+replace;
 run;
 
 /*
